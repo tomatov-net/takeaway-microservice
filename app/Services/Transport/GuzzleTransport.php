@@ -7,17 +7,19 @@ use GuzzleHttp\Client;
 class GuzzleTransport implements TransportInterface
 {
     private $client;
+    private $sendAs;
 
-    function __construct($options)
+    function __construct(array $options = [])
     {
         $this->client = new Client($options);
+        $this->sendAs = $options['send_as'] ?? 'json';
     }
 
-    public function request($method, $url, $data, $headers = [])
+    public function request(string $method, string $url, array $data, array $headers = [], string $as = 'json'): string
     {
         try {
             $result = $this->client->request($method, $url, [
-                'json' => $data,
+                $as => $data,
                 'headers' => $headers
             ]);
 

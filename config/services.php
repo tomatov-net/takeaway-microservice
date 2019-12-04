@@ -30,4 +30,22 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sms' => [
+        'default' => env('DEFAULT_SMS_PROVIDER', 'twilio'),
+        'providers' => [
+            'twilio' => [
+                'key' => env('TWILIO_SID', ''),
+                'secret' => env('TWILIO_AUTH_TOKEN', ''),
+                'class' => \App\Services\TransportProviders\TwilioProvider::class,
+                'from_phone_number' => env('TWILIO_FROM_SMS_NUMBER', ''),
+            ],
+            'nexmo' => [
+                'key' => env('NEXMO_KEY', ''),
+                'secret' => env('NEXMO_SECRET', ''),
+                'class' => \App\Services\TransportProviders\NexmoProvider::class,
+                'from_phone_number' => env('FROM_SMS_NUMBER', ''),
+            ],
+        ],
+    ]
+
 ];
