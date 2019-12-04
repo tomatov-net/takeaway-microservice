@@ -1,0 +1,74 @@
+version: "3.3"
+
+services:
+  app-nginx:
+    image: nginx:alpine
+    container_name: "takeaway-test-app-nginx"
+    ports:
+      - "3080:80"
+    volumes:
+      - ./:/var/www
+      - ./_docker/routing/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./_docker/routing/fastcgi_params:/etc/nginx/fastcgi_params:ro
+      - ./_docker/routing/conf.d/:/etc/nginx/conf.d:ro
+    networks:
+      - app-network
+
+  app-fpm:
+    build:
+      context: ./_docker
+      dockerfile: php-fpm.docker
+    container_name: "takeaway-test-app-fpm"
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./_docker/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./_docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
+    networks:
+      - app-network
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 1
+      APP_KEY: "base64:46UPFHEBEGaa9CBU4SQbNd5N0BZAxW5gmDB0e12kcRk="
+      DB_CONNECTION: mysql
+      DB_HOST: app-db
+      DB_PORT: 3306
+      DB_USERNAME: takeaway
+      DB_PASSWORD: takeaway
+      DB_DATABASE: takeaway_db
+      BROADCAST_DRIVER: redis
+      REDIS_HOST: app-redis
+      REDIS_PORT: 6379
+    #command: php /var/www/artisan queue:work
+    expose:
+      - "9000"
+      - "9001"
+    tty: true
+
+  app-db:
+    image: mysql:5.7
+    container_name: "takeaway-test-app-db"
+    ports:
+      - "33306:3306"
+    volumes:
+      - ./:/var/www
+    networks:
+      - app-network
+    environment:
+      MYSQL_USER: takeaway
+      MYSQL_PASSWORD: takeaway
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: takeaway_db
+
+  app-redis:
+    image: redis:latest
+    networks:
+      - app-network
+
+volumes:
+  app-db-data:
+  app-code:
+
+networks:
+  app-network:
+
