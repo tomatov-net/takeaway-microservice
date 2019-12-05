@@ -12,8 +12,8 @@ class MessageTypeSeeder extends Seeder
     public function run()
     {
         $types = [
-            'initial',
-            'final',
+            \App\Enums\MessageTypeEnum::INITIAL,
+            \App\Enums\MessageTypeEnum::FINAL,
         ];
 
         foreach ($types as $type) {

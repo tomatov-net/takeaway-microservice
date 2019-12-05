@@ -26,7 +26,10 @@ class CreateOrdersTable extends Migration
             $table->dateTime('deliver_before');
 
             $table->string('client_phone_number');
+            $table->text('client_name');
+
             $table->text('order_details')->nullable();
+
             $table->timestamps();
         });
     }
