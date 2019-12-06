@@ -9,7 +9,7 @@ use App\Services\Transport\TransportInterface;
 
 class DefaultProvider
 {
-    public static function getDefaultProvider(TransportInterface $transport)
+    public static function getDefaultProvider(TransportInterface $transport): TransportProviderInterface
     {
         $defaultNameByConfig = config('services.sms.default');
         $defaultProvider = config("services.sms.providers.{$defaultNameByConfig}");
