@@ -15,11 +15,21 @@ class CreateMessagesTable extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->bigIncrements('id');
+
             $table->unsignedBigInteger('message_type_id')->nullable();
             $table->foreign('message_type_id')
                 ->references('id')
                 ->on('message_types')
                 ->onDelete('SET NULL');
+
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('orders')
+                ->onDelete('cascade');
+
+            $table->text('text');
+
             $table->timestamps();
         });
     }
