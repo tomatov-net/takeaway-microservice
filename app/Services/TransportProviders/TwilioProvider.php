@@ -3,6 +3,7 @@
 namespace App\Services\TransportProviders;
 
 use App\Services\Transport\TransportInterface;
+use Illuminate\Support\Facades\Log;
 
 class TwilioProvider implements TransportProviderInterface
 {
@@ -23,6 +24,7 @@ class TwilioProvider implements TransportProviderInterface
 
     public function sendSms($to, $message, $data = []): string
     {
+        $to = !strpos($to, '+') ? "+{$to}" : $to;
         $base = base64_encode("{$this->key}:{$this->secret}");
         $url = "https://api.twilio.com/2010-04-01/Accounts/{$this->key}/Messages.json";
         $result = $this->transport->request('post', $url, [
@@ -35,6 +37,13 @@ class TwilioProvider implements TransportProviderInterface
             'Authorization' => "Basic $base"
         ], 'form_params');
 
+        $this->log($result);
+
         return $result;
+    }
+
+    private function log($data)
+    {
+        Log::info($data);
     }
 }

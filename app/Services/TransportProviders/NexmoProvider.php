@@ -4,6 +4,7 @@ namespace App\Services\TransportProviders;
 
 use App\Services\Transport\GuzzleTransport;
 use App\Services\Transport\TransportInterface;
+use Illuminate\Support\Facades\Log;
 
 class NexmoProvider implements TransportProviderInterface
 {
@@ -32,6 +33,13 @@ class NexmoProvider implements TransportProviderInterface
             'text' => $message,
         ]);
 
+        $this->log($result);
+
         return $result;
+    }
+
+    private function log($data)
+    {
+        Log::info($data);
     }
 }
