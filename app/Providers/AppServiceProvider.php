@@ -30,8 +30,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \Validator::extend('restaurantExists', function ($attribute, $value, $parameters) {
-            $repository = new RestaurantRepository();
-            return (bool) $repository->find($value);
+            return (bool) RestaurantRepository::find($value);
         });
     }
 }
