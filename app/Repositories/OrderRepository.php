@@ -5,7 +5,7 @@ namespace App\Repositories;
 
 
 use App\Enums\MessageTypeEnum;
-use App\Events\OrderConfirmed;
+use App\Events\OrderStateConfirmed;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Carbon\Carbon;
@@ -25,7 +25,16 @@ class OrderRepository
 
     public function confirm(int $orderId): void
     {
-        event(new OrderConfirmed($orderId, MessageTypeEnum::INITIAL));
+        event(new OrderStateConfirmed($orderId, MessageTypeEnum::INITIAL));
+    }
+
+    public function deliver(int $orderId): Order
+    {
+        $order = self::find($orderId);
+        $order->delivered_at = now();
+        $order->save();
+
+        return $order;
     }
 
     public function getDeliverBeforeTime(Restaurant $restaurant): Carbon

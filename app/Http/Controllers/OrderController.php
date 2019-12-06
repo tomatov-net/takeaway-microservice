@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderConfirmRequest;
+use App\Http\Requests\OrderCreateRequest;
+use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class OrderController
@@ -11,30 +15,47 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     /**
-     * @param Request $request
-     * @param int $restaurantId
+     * @param OrderCreateRequest $request
+     * @param OrderRepository $orderRepository
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request, int $restaurantId)
+    public function create(OrderCreateRequest $request, OrderRepository $orderRepository): JsonResponse
     {
+        $orderData = [
+            'restaurant_id' => $request->restaurant_id,
+            'client_phone_number' => $request->client_phone_number,
+            'client_name' => $request->client_name,
+            'order_details' => $request->order_details,
+        ];
 
+        $orderRepository->create($orderData);
+
+        return response()->json(['message' => 'Order has been created']);
+    }
+
+    /**
+     * @param OrderConfirmRequest $request
+     * @param int $orderId
+     * @param OrderRepository $orderRepository
+     * @return JsonResponse
+     */
+    public function confirm(OrderConfirmRequest $request, int $orderId, OrderRepository $orderRepository): JsonResponse
+    {
+        $orderRepository->confirm($orderId);
+
+        return response()->json(['message' => 'Order has been confirmed']);
     }
 
     /**
      * @param Request $request
      * @param int $orderId
+     * @param OrderRepository $orderRepository
+     * @return JsonResponse
      */
-    public function confirm(Request $request, int $orderId)
+    public function deliver(Request $request, int $orderId, OrderRepository $orderRepository): JsonResponse
     {
-
-    }
-
-    /**
-     * @param Request $request
-     * @param int $orderId
-     */
-    public function deliver(Request $request, int $orderId)
-    {
-
+        $orderRepository->deliver($orderId);
+        return response()->json(['message' => 'Order has been delivered']);
     }
 
     /**
@@ -43,6 +64,6 @@ class OrderController extends Controller
      */
     public function cancel(Request $request, int $orderId)
     {
-
+        /*todo implement logic*/
     }
 }

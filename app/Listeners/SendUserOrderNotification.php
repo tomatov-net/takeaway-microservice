@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderConfirmed;
+use App\Events\OrderStateConfirmed;
 use App\Jobs\SendTextMessage;
 use App\Repositories\MessageRepository;
 use App\Repositories\OrderRepository;
@@ -30,10 +30,10 @@ class SendUserOrderNotification
     /**
      * Handle the event.
      *
-     * @param  OrderConfirmed  $event
+     * @param  OrderStateConfirmed  $event
      * @return void
      */
-    public function handle(OrderConfirmed $event)
+    public function handle(OrderStateConfirmed $event)
     {
         $orderId = $event->orderId;
         $messageType = $event->messageType;
