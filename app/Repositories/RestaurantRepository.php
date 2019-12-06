@@ -8,7 +8,7 @@ use App\Models\Restaurant;
 
 class RestaurantRepository
 {
-    public function find($id)
+    public static function find($id)
     {
         return Restaurant::find($id);
     }

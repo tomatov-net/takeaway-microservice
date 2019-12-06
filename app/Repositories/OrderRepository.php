@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Enums\MessageTypeEnum;
+use App\Events\OrderConfirmed;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Carbon\Carbon;
@@ -13,7 +14,7 @@ class OrderRepository
 {
     public function create(array $data)
     {
-        $restaurant = Restaurant::find($data['restaurant_id']);
+        $restaurant = RestaurantRepository::find($data['restaurant_id']);
 
         $data['deliver_before'] = $this->getDeliverBeforeTime($restaurant);
 
@@ -22,15 +23,9 @@ class OrderRepository
         return $order;
     }
 
-    public function confirm(int $orderId)
+    public function confirm(int $orderId): void
     {
-        $messageRepository = new MessageRepository();
-        $order = Order::find($orderId);
-
-        $order->messages()->create([
-            'text' => $messageRepository->getMessageByOrder($order),
-            'message_type_id' => MessageTypeEnum::INITIAL,
-        ]);
+        event(new OrderConfirmed($orderId, MessageTypeEnum::INITIAL));
     }
 
     public function getDeliverBeforeTime(Restaurant $restaurant): Carbon
