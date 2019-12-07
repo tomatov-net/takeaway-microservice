@@ -30,7 +30,7 @@ class OrderController extends Controller
 
         $orderRepository->create($orderData);
 
-        return response()->json(['message' => 'Order has been created']);
+        return response()->json(['message' => 'Order has been created', 'status' => 'created']);
     }
 
     /**
@@ -41,9 +41,22 @@ class OrderController extends Controller
      */
     public function confirm(OrderConfirmRequest $request, int $orderId, OrderRepository $orderRepository): JsonResponse
     {
-        $orderRepository->confirm($orderId);
+        if (!$orderRepository->isConfirmed($orderId)) {
+            $orderRepository->confirm($orderId);
 
-        return response()->json(['message' => 'Order has been confirmed']);
+            return response()->json(['message' => 'Order has been confirmed', 'status' => 'confirmed']);
+        }
+
+        return response()->json([
+            "message" => "Current order has been already confirmed",
+            "status" => "already_confirmed",
+            "errors" => [
+                "order_id" => [
+                    "The order with id = {$orderId} has been already confirmed"
+                ]
+            ]
+        ], 400);
+
     }
 
     /**
@@ -54,16 +67,21 @@ class OrderController extends Controller
      */
     public function deliver(Request $request, int $orderId, OrderRepository $orderRepository): JsonResponse
     {
-        $orderRepository->deliver($orderId);
-        return response()->json(['message' => 'Order has been delivered']);
-    }
+        if ($orderRepository->isConfirmed($orderId) && !$orderRepository->isDelivered($orderId)) {
+            $orderRepository->deliver($orderId);
 
-    /**
-     * @param Request $request
-     * @param int $orderId
-     */
-    public function cancel(Request $request, int $orderId)
-    {
-        /*todo implement logic*/
+            return response()->json(['message' => 'Order has been delivered', 'status' => 'delivered']);
+
+        }
+
+        return response()->json([
+            "message" => "Current order has been already delivered",
+            "status" => "already_delivered",
+            "errors" => [
+                "order_id" => [
+                    "The order with id = {$orderId} has been already delivered"
+                ]
+            ]
+        ], 400);
     }
 }

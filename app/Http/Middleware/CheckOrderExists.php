@@ -21,13 +21,14 @@ class CheckOrderExists
         if (!OrderRepository::find($orderId)) {
             $responseData = [
                 "message" => "The given data was invalid.",
+                "status" => "not_exists",
                 "errors" => [
                     "order_id" => [
                         "The order with id = {$orderId} does not exist."
                     ]
                 ]
             ];
-            return response()->json($responseData);
+            return response()->json($responseData, 400);
         }
         return $next($request);
     }

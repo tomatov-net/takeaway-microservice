@@ -11,6 +11,7 @@ use App\Models\Restaurant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderRepository
 {
@@ -18,7 +19,7 @@ class OrderRepository
     {
         $restaurant = RestaurantRepository::find($data['restaurant_id']);
 
-        $data['deliver_before'] = $this->getDeliverBeforeTime($restaurant);
+        #$data['deliver_before'] = $this->getDeliverBeforeTime($restaurant);
 
         $order = $restaurant->orders()->create($data);
 
@@ -27,7 +28,25 @@ class OrderRepository
 
     public function confirm(int $orderId): void
     {
+        $order = self::find($orderId);
+        $restaurant = $order->restaurant;
+
+        $order->deliver_before = $this->getDeliverBeforeTime($restaurant);
+        $order->save();
+
         event(new OrderStateChanged($orderId, MessageTypeEnum::INITIAL));
+    }
+
+    public function isConfirmed(int $orderId): bool
+    {
+        $order = self::find($orderId);
+        return $order->messages()->count() > 0 && $order->deliver_before !== null;
+    }
+
+    public function isDelivered(int $orderId): bool
+    {
+        $order = self::find($orderId);
+        return $order->delivered_at !== null;
     }
 
     public function deliver(int $orderId): Order
