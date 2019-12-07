@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\ScopeQueries\OrderScopes;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use OrderScopes;
+
     protected $dates = [
         'delivered_at',
         'deliver_before',
