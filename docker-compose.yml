@@ -39,7 +39,6 @@ services:
       BROADCAST_DRIVER: redis
       REDIS_HOST: app-redis
       REDIS_PORT: 6379
-    #command: php /var/www/artisan queue:work
     expose:
       - "9000"
       - "9001"
@@ -59,6 +58,24 @@ services:
       MYSQL_PASSWORD: takeaway
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: takeaway_db
+
+  app-fpm-cron:
+    build:
+      context: ./_docker/cron
+      dockerfile: cron.docker
+    container_name: "takeaway-test-app-fpm-cron"
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./_docker/cron/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./_docker/cron/php/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
+    networks:
+      - app-network
+    environment:
+      DB_HOST: app-db
+    links:
+      - app-db
+    tty: true
 
   app-redis:
     image: redis:latest

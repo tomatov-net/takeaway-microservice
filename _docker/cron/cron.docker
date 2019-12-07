@@ -1,6 +1,6 @@
 FROM laradock/php-fpm:2.2-7.2
 
-RUN apt-get update && apt-get install -y libmcrypt-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev zip libpq-dev default-mysql-client wget libzip-dev \
+RUN apt-get update && apt-get install -y libmcrypt-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev zip libpq-dev default-mysql-client wget libzip-dev cron \
     && docker-php-ext-install pdo_mysql \
     && pecl install mcrypt-1.0.2 \
     && docker-php-ext-enable mcrypt \
@@ -13,10 +13,18 @@ RUN apt-get update && apt-get install -y libmcrypt-dev libfreetype6-dev libjpeg6
 ADD ./php/php.ini /usr/local/etc/php/conf.d/default.ini
 RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/bin --filename=composer --quiet
 
-# PHPUnit
-RUN wget https://phar.phpunit.de/phpunit.phar -O /usr/local/bin/phpunit \
-    && chmod +x /usr/local/bin/phpunit
-
 WORKDIR /var/www
+
+# Add crontab file in the cron directory
+ADD ./crontab /etc/cron.d/laravel-crontab
+
+# Give execution rights on the cron job
+RUN chmod 0777 /etc/cron.d/laravel-crontab
+RUN crontab /etc/cron.d/laravel-crontab
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+
+CMD printenv > /etc/environment && echo "cron starting..." && (cron -f)
 
 RUN chown -R www-data:www-data /var/www
