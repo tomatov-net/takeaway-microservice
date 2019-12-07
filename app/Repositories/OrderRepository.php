@@ -5,10 +5,12 @@ namespace App\Repositories;
 
 
 use App\Enums\MessageTypeEnum;
-use App\Events\OrderStateConfirmed;
+use App\Events\OrderStateChanged;
 use App\Models\Order;
 use App\Models\Restaurant;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class OrderRepository
 {
@@ -25,7 +27,7 @@ class OrderRepository
 
     public function confirm(int $orderId): void
     {
-        event(new OrderStateConfirmed($orderId, MessageTypeEnum::INITIAL));
+        event(new OrderStateChanged($orderId, MessageTypeEnum::INITIAL));
     }
 
     public function deliver(int $orderId): Order
@@ -47,5 +49,17 @@ class OrderRepository
     public static function find($id)
     {
         return Order::find($id);
+    }
+
+    public function getRecentlyDeliveredOrders(int $minutes):Collection
+    {
+        $time = now()->subMinutes($minutes);
+        $orders = Order::delivered()
+            ->withoutFinalMessage()
+            ->where('delivered_at', '<', $time)
+            ->get()
+        ;
+
+        return $orders;
     }
 }
