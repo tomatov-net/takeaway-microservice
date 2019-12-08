@@ -28,9 +28,13 @@ class OrderController extends Controller
             'order_details' => $request->order_details,
         ];
 
-        $orderRepository->create($orderData);
+        $order = $orderRepository->create($orderData);
 
-        return response()->json(['message' => 'Order has been created', 'status' => 'created']);
+        return response()->json([
+            'message' => 'Order has been created',
+            'order_id' => $order->id,
+            'status' => 'created'
+        ]);
     }
 
     /**

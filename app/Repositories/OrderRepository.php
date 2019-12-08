@@ -19,8 +19,6 @@ class OrderRepository
     {
         $restaurant = RestaurantRepository::find($data['restaurant_id']);
 
-        #$data['deliver_before'] = $this->getDeliverBeforeTime($restaurant);
-
         $order = $restaurant->orders()->create($data);
 
         return $order;

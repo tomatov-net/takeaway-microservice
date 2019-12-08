@@ -25,7 +25,7 @@ class OrderCreateRequest extends FormRequest
     {
         return [
             'restaurant_id' => 'required|restaurantExists',
-            'client_phone_number' => 'required|max:15',
+            'client_phone_number' => 'required|max:20',
             'client_name' => 'required|max:128',
             'order_details' => 'required|max:1000',
         ];
