@@ -77,11 +77,6 @@ services:
       - app-db
     tty: true
 
-  app-redis:
-    image: redis:latest
-    networks:
-      - app-network
-
 volumes:
   app-db-data:
   app-code:

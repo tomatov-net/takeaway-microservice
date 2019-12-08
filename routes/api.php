@@ -20,6 +20,5 @@ Route::group(['prefix' => 'orders', 'name' => 'orders.'], function () {
     Route::group(['middleware' => ['check_order_exists']], function () {
         Route::post('confirm/{id}', 'OrderController@confirm')->name('confirm');
         Route::post('deliver/{id}', 'OrderController@deliver')->name('deliver');
-        Route::post('cancel/{id}', 'OrderController@cancel')->name('cancel');
     });
 });

@@ -1,0 +1,258 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Takeaway test API",
+    "description" : "This is a test API",
+    "contact" : {
+      "email" : "you@takeaway.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/tomatov.net/TakeawayTestAPI/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  }, {
+    "url" : "https://localhost:3080/api",
+    "description" : "Localhost test api"
+  } ],
+  "tags" : [ {
+    "name" : "orders",
+    "description" : "Common calls to operate the orders"
+  } ],
+  "paths" : {
+    "/create" : {
+      "post" : {
+        "tags" : [ "orders" ],
+        "summary" : "create new order",
+        "description" : "Create new order by restaurant_id\n",
+        "operationId" : "createOrderByRestaurantId",
+        "requestBody" : {
+          "description" : "Create new order",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OrderCreateRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Order has been created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrderCreateResponse_200"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Parameters are wrong or missing",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Response400"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/confirm/{id}" : {
+      "post" : {
+        "tags" : [ "confirm order" ],
+        "summary" : "confirm the order",
+        "description" : "Confirm the order by id\n",
+        "operationId" : "confirmOrderById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The order ID",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Order has been confirmed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrderConfirmResponse_200"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Parameters are wrong or missing",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Response400"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deliver/{id}" : {
+      "post" : {
+        "tags" : [ "deliver order" ],
+        "summary" : "mark the order as 'delivered'",
+        "description" : "Deliver the order by id\n",
+        "operationId" : "deliverOrderById",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The order ID",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Order has been delivered",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrderDeliverResponse_200"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Parameters are wrong or missing",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Response400"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "OrderCreateRequest" : {
+        "required" : [ "client_name", "client_phone_number", "order_details", "restaurant_id" ],
+        "type" : "object",
+        "properties" : {
+          "restaurant_id" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 12
+          },
+          "client_phone_number" : {
+            "maxLength" : 20,
+            "type" : "string",
+            "example" : "78888323312"
+          },
+          "client_name" : {
+            "maxLength" : 128,
+            "type" : "string",
+            "example" : "John"
+          },
+          "order_details" : {
+            "maxLength" : 1000,
+            "type" : "string",
+            "example" : "Steamed salmon & veg rice bowl"
+          }
+        }
+      },
+      "OrderCreateResponse_200" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Order has been created"
+          },
+          "order_id" : {
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 1221
+          },
+          "status" : {
+            "type" : "string",
+            "example" : "created"
+          }
+        }
+      },
+      "OrderConfirmResponse_200" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Order has been confirmed"
+          },
+          "status" : {
+            "type" : "string",
+            "example" : "confirmed"
+          }
+        }
+      },
+      "OrderDeliverResponse_200" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Order has been delivered"
+          },
+          "status" : {
+            "type" : "string",
+            "example" : "delivered"
+          }
+        }
+      },
+      "Response400" : {
+        "required" : [ "errors", "message" ],
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "The given data was invalid."
+          },
+          "status" : {
+            "type" : "string",
+            "example" : "not_exists"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Response400_errors"
+            }
+          }
+        }
+      },
+      "Response400_errors" : {
+        "type" : "object",
+        "properties" : {
+          "some_property" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "example" : "'The order with id = 121 does not exist.'\n"
+            }
+          }
+        }
+      }
+    }
+  }
+}
