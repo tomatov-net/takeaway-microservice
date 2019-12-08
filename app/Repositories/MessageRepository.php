@@ -8,9 +8,15 @@ use App\Enums\MessageTypeEnum;
 use App\Models\Message;
 use App\Models\Order;
 
+/**
+ * Class MessageRepository
+ * @package App\Repositories
+ */
 class MessageRepository
 {
     /**
+     * Generate message text to send it to client
+     *
      * @param Order $order
      * @param string $type
      * @return string
@@ -26,6 +32,8 @@ class MessageRepository
     }
 
     /**
+     * Create message
+     *
      * @param int $orderId
      * @param string $type
      * @return array

@@ -5,13 +5,33 @@ namespace App\Services\TransportProviders;
 use App\Services\Transport\TransportInterface;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class TwilioProvider
+ * @package App\Services\TransportProviders
+ */
 class TwilioProvider implements TransportProviderInterface
 {
+    /**
+     * @var string|mixed
+     */
     protected $key;
+    /**
+     * @var string|mixed
+     */
     protected $secret;
+    /**
+     * @var string|mixed
+     */
     protected $from;
+    /**
+     * @var TransportInterface
+     */
     protected $transport;
 
+    /**
+     * TwilioProvider constructor.
+     * @param TransportInterface $transport
+     */
     public function __construct(TransportInterface $transport)
     {
         $path = 'services.sms.providers.twilio.';
@@ -22,9 +42,14 @@ class TwilioProvider implements TransportProviderInterface
         $this->transport = $transport;
     }
 
-    public function sendSms($to, $message, $data = []): string
+    /**
+     * @param string $to
+     * @param string $message
+     * @param array $data
+     * @return string
+     */
+    public function sendSms(string $to, string $message, array $data = []): string
     {
-        $to = !strpos($to, '+') ? "+{$to}" : $to;
         $base = base64_encode("{$this->key}:{$this->secret}");
         $url = "https://api.twilio.com/2010-04-01/Accounts/{$this->key}/Messages.json";
         $result = $this->transport->request('post', $url, [
@@ -42,7 +67,10 @@ class TwilioProvider implements TransportProviderInterface
         return $result;
     }
 
-    private function log($data)
+    /**
+     * @param string $data
+     */
+    private function log(string $data)
     {
         Log::info($data);
     }

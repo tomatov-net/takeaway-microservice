@@ -21,12 +21,7 @@ class OrderController extends Controller
      */
     public function create(OrderCreateRequest $request, OrderRepository $orderRepository): JsonResponse
     {
-        $orderData = [
-            'restaurant_id' => $request->restaurant_id,
-            'client_phone_number' => $request->client_phone_number,
-            'client_name' => $request->client_name,
-            'order_details' => $request->order_details,
-        ];
+        $orderData = $request->getOrderData();
 
         $order = $orderRepository->create($orderData);
 

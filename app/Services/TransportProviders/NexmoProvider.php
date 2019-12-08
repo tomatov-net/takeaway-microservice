@@ -6,13 +6,33 @@ use App\Services\Transport\GuzzleTransport;
 use App\Services\Transport\TransportInterface;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class NexmoProvider
+ * @package App\Services\TransportProviders
+ */
 class NexmoProvider implements TransportProviderInterface
 {
+    /**
+     * @var string|mixed
+     */
     protected $key;
+    /**
+     * @var string|mixed
+     */
     protected $secret;
+    /**
+     * @var string|mixed
+     */
     protected $from;
+    /**
+     * @var TransportInterface
+     */
     protected $transport;
 
+    /**
+     * NexmoProvider constructor.
+     * @param TransportInterface $transport
+     */
     public function __construct(TransportInterface $transport)
     {
         $path = 'services.sms.providers.nexmo.';
@@ -23,7 +43,14 @@ class NexmoProvider implements TransportProviderInterface
         $this->transport = $transport;
     }
 
-    public function sendSms($to, $message, $data = []): string
+
+    /**
+     * @param string $to
+     * @param string $message
+     * @param array $data
+     * @return string
+     */
+    public function sendSms(string $to, string $message, array $data = []): string
     {
         $result = $this->transport->request('post', 'https://rest.nexmo.com/sms/json', [
             'api_key' => $this->key,
@@ -38,7 +65,10 @@ class NexmoProvider implements TransportProviderInterface
         return $result;
     }
 
-    private function log($data)
+    /**
+     * @param string $data
+     */
+    private function log(string $data)
     {
         Log::info($data);
     }
