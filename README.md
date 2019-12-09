@@ -1,7 +1,7 @@
 ## Takeaway Medior PHP developer test
 
 For current task I decided to use **Laravel** just to save some time, because I use it more often on daily basis, 
-rather than Lumen and Symfony. But for real project I would be choose something different, like **Symfony**, **Lumen**, or maybe *Node* with **Express.js**. 
+rather than Lumen and Symfony. But for real project I would choose something different, like **Symfony**, **Lumen**, or maybe *Node* with **Express.js**. 
 
 ### Run the project
 1. `docker-compose up --build`
