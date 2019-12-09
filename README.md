@@ -3,7 +3,7 @@
 For current task I decided to use **Laravel** just to save some time, because I use it more often on daily basis, 
 rather than Lumen and Symfony. But for real project I would be choose something different, like **Symfony**, **Lumen**, or maybe *Node* with **Express.js**. 
 
-###Run the project
+### Run the project
 1. `docker-compose up --build`
 2. `docker exec -it takeaway-test-app-fpm bash`
  - `composer install && cp .env.example .env`
@@ -11,7 +11,7 @@ rather than Lumen and Symfony. But for real project I would be choose something 
 
 `phpunit` or `phpunit --filter` to run the tests
 
-###Todo
+### Todo
 
 1. Initial laravel and docker installing
 2. Models, migrations and seeders creation
@@ -21,7 +21,7 @@ rather than Lumen and Symfony. But for real project I would be choose something 
 6. Tests running
 7. Pushing to github
 
-##Docker
+## Docker
 First things first, we need to run our app, so we need a docker.
 I added a few images there:
 - app-nginx to manage requests/responses
@@ -32,7 +32,7 @@ I added a few images there:
 I have had some troubles with running a docker in the same container with php-fpm.
 So I decided to take it out into separate container, with its own php-fpm instance.
 
-##Database
+## Database
 I designed database like this:
 [link](https://dbdiagram.io/d/5decf22cedf08a25543ed685)
 
@@ -44,7 +44,7 @@ I think there should be also *OrderStatus* model, connected with orders,
 but to save time I decided to pass it.
 
 
-###SMS-services
+### SMS-services
 I integrated 2 services: Nexmo and Twilio.
 Both have own components with composer support, but I decided to use Guzzle library, based on CURL to minimize composer dependencies amount.
 
@@ -56,7 +56,7 @@ To add new service all you need is:
  
 All SMS responses are logged by Laravel native Log::info() method. On real life project it should be changed to database storing.
 
-###REST API
+### REST API
 [Documentation by OpenAPI standarts](https://app.swaggerhub.com/apis/tomatov.net/TakeawayTestAPI/1.0.0?loggedInWithGitHub=true)
 
 Also there're files in the root of project: **openapi.json** and **openapi.yaml**.
@@ -73,7 +73,7 @@ But like I said, it's matter of time.
 `create` (fires by client, who wants to taste some good food :) endpoint creates new order by `restaurant_id` body parameter.
 
 
-#####All next endpoints are fired by system operator.
+##### All next endpoints are fired by system operator.
 
 `confirm` endpoint sets the `deliver_before` time, depending on restaurant delivery time value.
 In current project there's only one value per restaurant, stored in `delivery_times` table.
@@ -99,7 +99,7 @@ cron job starts check and compare current record, to send final message to custo
 After 90 minutes from `deliver_before`, customer gets final the message on his phone.
 
 
-###Repositories
+### Repositories
 All db operations with models I decided to put into separated classes in **app/Repositories**.
 
 Laravel scope queries I put into **app/Models/ScopeQueries** traits, to make code of model cleaner and shorter.
@@ -109,7 +109,7 @@ With repositories and entities current project could be more independent from da
 
 But it would be last long, and I refused to do it.
 
-###Tests
+### Tests
 Tests could be run via `phpunit` command. I wrote several tests, which cover API,
 sms sending, 
 
