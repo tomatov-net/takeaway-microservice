@@ -11,6 +11,9 @@ rather than Lumen and Symfony. But for real project I would choose something dif
 
 `phpunit` or `phpunit --filter` to run the tests
 
+Timezone could be changed in .env file:
+```TIMEZONE=UTC```
+
 ### Todo
 
 1. Initial laravel and docker installing
