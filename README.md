@@ -113,6 +113,9 @@ But it would be last long, and I refused to do it.
 Tests could be run via `phpunit` command. I wrote several tests, which cover API,
 sms sending, 
 
+### External API warning
+Due to my accounts on Twilio and Nexmo are trial, I'm not be able to send sms messages to other phone numbers, except mine.
+
 
 
  
