@@ -92,11 +92,11 @@ I decided to use queue for external APIs calling. In current project I do not us
 make queues smooth and fast, but on real project it's strongly recommended to use them, or something like them.
 
 
-`deliver` endpoint - is used to mark order as delivered to customer. From `delivered_at` time 
+`deliver` endpoint - is used to mark order as delivered to customer. From `deliver_before` time 
 cron job starts check and compare current record, to send final message to customer.
  
  
-After 90 minutes from `delivered_at`, customer gets final the message on his phone.
+After 90 minutes from `deliver_before`, customer gets final the message on his phone.
 
 
 ###Repositories
@@ -110,7 +110,8 @@ With repositories and entities current project could be more independent from da
 But it would be last long, and I refused to do it.
 
 ###Tests
-To run all test
+Tests could be run via `phpunit` command. I wrote several tests, which cover API,
+sms sending, 
 
 
 
