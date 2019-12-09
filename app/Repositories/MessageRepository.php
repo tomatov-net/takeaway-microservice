@@ -25,7 +25,8 @@ class MessageRepository
     {
         if ($type === MessageTypeEnum::INITIAL) {
             $time = $order->deliver_before->format('d.m.Y H:i');
-            return "Dear {$order->client_name}, thank you for your order. It will be delivered before {$time}.";
+            $restaurantName = $order->restaurant->name;
+            return "Dear {$order->client_name}, thank you for your order in {$restaurantName}. It will be delivered before {$time}.";
         }
 
         return "{$order->client_name}, we hope you enjoyed the food. Thank you and have a good time!";

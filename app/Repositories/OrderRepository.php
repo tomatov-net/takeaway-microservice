@@ -123,7 +123,7 @@ class OrderRepository
         $time = now()->subMinutes($minutes);
         $orders = Order::delivered()
             ->withoutFinalMessage()
-            ->where('delivered_at', '<', $time)
+            ->where('deliver_before', '<', $time)
             ->get()
         ;
 
