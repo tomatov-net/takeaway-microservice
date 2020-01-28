@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends Controller
 {
@@ -34,6 +36,22 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+        if(!$token = JWTAuth::attempt($credentials)){
+            return response()->json(['errors' => [
+                'login' => [
+                    'Invalid credentials!',
+                ]
+            ]], 401);
+        }
+
+        return response()->json([
+            'token' => $token,
+            'status' => 'logged_in',
+        ]);
     }
 }

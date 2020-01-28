@@ -14,5 +14,7 @@ class DatabaseSeeder extends Seeder
          $this->call(RestaurantSeeder::class);
          $this->call(DeliveryTimeSeeder::class);
          $this->call(MessageTypeSeeder::class);
+         $this->call(RoleSeeder::class);
+         $this->call(UserSeeder::class);
     }
 }

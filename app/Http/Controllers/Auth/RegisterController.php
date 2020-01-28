@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterController extends Controller
 {
@@ -58,15 +62,36 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return \App\User
+     * @param  Request  $request
+     * @return JsonResponse
      */
-    protected function create(array $data)
+    public function create(Request $request)
     {
-        return User::create([
+        $this->validator($request->all())->validate();
+
+        $data = $request->all();
+        $userExists = User::where('email', $data['email'])->exists();
+        if ($userExists) {
+            return response()->json(['errors' => [
+                'user' => [
+                    "User with email {$data['email']} already exists",
+                ]
+            ]], 403);
+        }
+
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role_id' => Role::getIdBySlug('customer'),
         ]);
+
+        $this->guard()->login($user);
+
+        return response()->json([
+            'user' => $user,
+            'status' => 'created',
+            'token' => JWTAuth::fromUser($user),
+        ], 200);
     }
 }
